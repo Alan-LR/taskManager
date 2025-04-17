@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository repository;
+
+    private static final String USER_NOT_FOUND = "Usuário não encontrado";
 
     public UserResponseDTO saveUser(UserResquestDTO data){
         User user = new User(data);
@@ -24,7 +27,8 @@ public class UserService {
     }
 
     public UserResponseDTO getUser(Long id){
-        User user = repository.getReferenceById(id);
+        Optional<User> userOptional = repository.findById(id);
+        User user = userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         return new UserResponseDTO(user);
     }
 
@@ -50,6 +54,6 @@ public class UserService {
                     User updatedUser = repository.save(existingUser);
                     return new UserResponseDTO(updatedUser);
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
     }
 }
