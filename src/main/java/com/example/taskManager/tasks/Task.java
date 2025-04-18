@@ -27,7 +27,7 @@ public class Task {
 
     // Para armazenar o nome do enum como string no banco
     @Enumerated(EnumType.STRING)
-    private statusTask status;
+    private StatusTask status;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskUser> taskUsers = new ArrayList<>();

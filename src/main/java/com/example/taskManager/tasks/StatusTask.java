@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum statusTask {
+public enum StatusTask {
     OPEN("Open"),
     CLOSE("Close");
 
