@@ -1,10 +1,12 @@
 package com.example.taskManager.tasks;
 
+import java.time.LocalDateTime;
+
 public record TaskResponseDTO (
         long id,
         String title,
         String description,
-        String dateCreate,
+        LocalDateTime dateCreate,
         StatusTask status
 ){
     public TaskResponseDTO(Task task){

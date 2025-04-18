@@ -4,6 +4,7 @@ import com.example.taskManager.taskUser.TaskUser;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class Task {
 
     private String title;
     private String description;
-    private String dateCreate;
-    private String dateConclusion;
+    private LocalDateTime dateCreate;
+    private LocalDateTime dateConclusion;
 
     // Para armazenar o nome do enum como string no banco
     @Enumerated(EnumType.STRING)
@@ -32,4 +33,8 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskUser> taskUsers = new ArrayList<>();
 
+    public Task(TaskRequestDTO data) {
+        this.title = data.title();
+        this.description = data.description();
+    }
 }

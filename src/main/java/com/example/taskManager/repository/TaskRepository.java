@@ -1,7 +1,7 @@
 package com.example.taskManager.repository;
 
-import com.example.taskManager.users.User;
+import com.example.taskManager.tasks.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TaskRepository extends JpaRepository<User, Long>  {
+public interface TaskRepository extends JpaRepository<Task, Long>  {
 }
