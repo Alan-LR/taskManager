@@ -28,6 +28,4 @@ public class TaskUser {
     private User user;
 
     private boolean responsible;
-
-
 }

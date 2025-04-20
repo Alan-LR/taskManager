@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -34,6 +35,11 @@ public class UserService {
 
     public List<UserResponseDTO> getAllUsers(){
         return repository.findAll().stream().map(UserResponseDTO:: new).toList();
+    }
+
+    public List<UserResponseDTO> getUserByName(String name){
+        List<User> users = repository.findByNameContainingIgnoreCase(name);
+        return users.stream().map(UserResponseDTO::new).collect(Collectors.toList());
     }
 
     public boolean deleteUser(Long id){

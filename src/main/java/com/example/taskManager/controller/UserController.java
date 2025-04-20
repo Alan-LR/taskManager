@@ -29,6 +29,12 @@ public class UserController {
         return  ResponseEntity.ok(updateUser);
     }
 
+    @GetMapping("/name")
+    public ResponseEntity<List<UserResponseDTO>> getUserByName(@RequestParam String name){
+        List<UserResponseDTO> users = service.getUserByName(name);
+        return ResponseEntity.ok(users);
+    }
+
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>>getAllUsers(){
         List<UserResponseDTO> users = service.getAllUsers();

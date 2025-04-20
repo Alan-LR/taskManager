@@ -42,7 +42,7 @@ public class TaskService {
         return openTasks.stream().map(TaskResponseDTO::new).collect(Collectors.toList());
     }
 
-    public List<TaskResponseDTO> getTaskByTitle(String title){
+    public List<TaskResponseDTO> getTaskByTitle(String title) {
         List<Task> tasks = repository.findByTitleContainingIgnoreCase(title);
         return tasks.stream().map(TaskResponseDTO::new).collect(Collectors.toList());
     }
@@ -66,7 +66,6 @@ public class TaskService {
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND));
 
     }
-
 
     public TaskResponseDTO updateStatus(Long id, StatusTask status) {
         return repository.findById(id).map(
