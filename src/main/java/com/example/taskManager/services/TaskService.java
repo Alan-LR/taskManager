@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -34,6 +35,16 @@ public class TaskService {
 
     public List<TaskResponseDTO> getAllTasks() {
         return repository.findAll().stream().map(TaskResponseDTO::new).toList();
+    }
+
+    public List<TaskResponseDTO> getTasksOpenClose(StatusTask status) {
+        List<Task> openTasks = repository.findByStatus(status);
+        return openTasks.stream().map(TaskResponseDTO::new).collect(Collectors.toList());
+    }
+
+    public List<TaskResponseDTO> getTaskByTitle(String title){
+        List<Task> tasks = repository.findByTitleContainingIgnoreCase(title);
+        return tasks.stream().map(TaskResponseDTO::new).collect(Collectors.toList());
     }
 
     public boolean deleteTask(Long id) {

@@ -43,6 +43,27 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    @GetMapping("/title")
+    public ResponseEntity<List<TaskResponseDTO>> getTaskByTitle(@RequestParam String title){
+        List<TaskResponseDTO> tasks = service.getTaskByTitle(title);
+        if(tasks.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/open")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksOpen(){
+        List<TaskResponseDTO> tasksOpen = service.getTasksOpenClose(StatusTask.OPEN);
+        return ResponseEntity.ok(tasksOpen);
+    }
+
+    @GetMapping("/close")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksOpenClose(){
+        List<TaskResponseDTO> tasksOpen = service.getTasksOpenClose(StatusTask.CLOSE);
+        return ResponseEntity.ok(tasksOpen);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> getTask(@PathVariable Long id) {
         TaskResponseDTO task = service.getTask(id);
