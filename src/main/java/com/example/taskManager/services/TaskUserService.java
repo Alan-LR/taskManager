@@ -29,6 +29,7 @@ public class TaskUserService {
 
     private static final String TASK_CLOSED = "Não é possível adicionar usuários a uma tarefa com status 'CLOSE'.";
     private static final String USER_NOT_HAVE_TASKS = "Esse usuário não possuí tarefas";
+    private static final String TASK_NOT_HAVE_USERS = "Essa tarefa não possuí usuários";
 
     public TaskUserResponseDTO createTaskUser(TaskUserRequestDTO data) {
         User user = userRepository.findById(data.userId())
@@ -57,5 +58,21 @@ public class TaskUserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_HAVE_TASKS);
         }
         return taskUsers.stream().map(UserTasksResponseDTO::new).collect(Collectors.toList());
+    }
+
+    public List<UsersOfTaskResponseDTO> getUsersOfTaskByIdTask(Long id){
+        List<TaskUser> usersTask = repository.findByTaskIdNativeQuery(id);
+        if(usersTask.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_HAVE_USERS);
+        }
+        return usersTask.stream().map(UsersOfTaskResponseDTO::new).collect(Collectors.toList());
+    }
+
+    public boolean deleteTaskUser(Long taskId, Long userId){
+        if(taskRepository.existsById(taskId) && userRepository.existsById(userId)){
+            repository.removeUserFromTask(taskId, userId);
+            return true;
+        }
+        return false;
     }
 }
