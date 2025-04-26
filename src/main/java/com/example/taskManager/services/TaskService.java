@@ -1,7 +1,10 @@
 package com.example.taskManager.services;
 
+import com.example.taskManager.entities.tasks.StatusTask;
+import com.example.taskManager.entities.tasks.Task;
+import com.example.taskManager.entities.tasks.TaskRequestDTO;
+import com.example.taskManager.entities.tasks.TaskResponseDTO;
 import com.example.taskManager.repository.TaskRepository;
-import com.example.taskManager.tasks.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

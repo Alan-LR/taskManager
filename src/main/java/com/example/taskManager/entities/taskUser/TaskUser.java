@@ -1,7 +1,7 @@
-package com.example.taskManager.taskUser;
+package com.example.taskManager.entities.taskUser;
 
-import com.example.taskManager.tasks.Task;
-import com.example.taskManager.users.User;
+import com.example.taskManager.entities.tasks.Task;
+import com.example.taskManager.entities.users.User;
 import jakarta.persistence.*;
 import lombok.*;
 

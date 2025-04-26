@@ -1,4 +1,4 @@
-package com.example.taskManager.taskUser;
+package com.example.taskManager.entities.taskUser;
 
 import java.time.LocalDateTime;
 

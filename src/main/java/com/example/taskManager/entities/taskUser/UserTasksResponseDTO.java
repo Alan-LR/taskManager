@@ -1,7 +1,6 @@
-package com.example.taskManager.taskUser;
+package com.example.taskManager.entities.taskUser;
 
-import com.example.taskManager.tasks.StatusTask;
-import com.example.taskManager.tasks.Task;
+import com.example.taskManager.entities.tasks.StatusTask;
 
 import java.time.LocalDateTime;
 

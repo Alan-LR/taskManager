@@ -1,9 +1,9 @@
 package com.example.taskManager.services;
 
 import com.example.taskManager.repository.UserRepository;
-import com.example.taskManager.users.User;
-import com.example.taskManager.users.UserResponseDTO;
-import com.example.taskManager.users.UserResquestDTO;
+import com.example.taskManager.entities.users.User;
+import com.example.taskManager.entities.users.UserResponseDTO;
+import com.example.taskManager.entities.users.UserResquestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

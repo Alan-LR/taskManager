@@ -1,4 +1,4 @@
-package com.example.taskManager.tasks;
+package com.example.taskManager.entities.tasks;
 
 public record TaskRequestDTO (String title, String description){
     public TaskRequestDTO(Task task){

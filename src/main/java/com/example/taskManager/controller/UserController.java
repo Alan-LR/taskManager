@@ -1,8 +1,8 @@
 package com.example.taskManager.controller;
 
 import com.example.taskManager.services.UserService;
-import com.example.taskManager.users.UserResponseDTO;
-import com.example.taskManager.users.UserResquestDTO;
+import com.example.taskManager.entities.users.UserResponseDTO;
+import com.example.taskManager.entities.users.UserResquestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

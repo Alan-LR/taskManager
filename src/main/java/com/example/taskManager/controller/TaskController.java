@@ -1,10 +1,10 @@
 package com.example.taskManager.controller;
 
 import com.example.taskManager.services.TaskService;
-import com.example.taskManager.tasks.StatusTask;
-import com.example.taskManager.tasks.TaskRequestDTO;
-import com.example.taskManager.tasks.TaskResponseDTO;
-import com.example.taskManager.tasks.UpdateTaskStatusRequestDTO;
+import com.example.taskManager.entities.tasks.StatusTask;
+import com.example.taskManager.entities.tasks.TaskRequestDTO;
+import com.example.taskManager.entities.tasks.TaskResponseDTO;
+import com.example.taskManager.entities.tasks.UpdateTaskStatusRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

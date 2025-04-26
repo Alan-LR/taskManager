@@ -1,12 +1,14 @@
-package com.example.taskManager.users;
+package com.example.taskManager.entities.users;
 
-import com.example.taskManager.taskUser.TaskUser;
+import com.example.taskManager.entities.role.Role;
+import com.example.taskManager.entities.taskUser.TaskUser;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "users")
 @Entity(name = "users")
@@ -33,6 +35,14 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskUser> taskUsers = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     public User(UserResquestDTO data){
         this.name = data.name();

@@ -1,12 +1,12 @@
 package com.example.taskManager.services;
 
+import com.example.taskManager.entities.taskUser.*;
 import com.example.taskManager.repository.TaskRepository;
 import com.example.taskManager.repository.TaskUserRepository;
 import com.example.taskManager.repository.UserRepository;
-import com.example.taskManager.taskUser.*;
-import com.example.taskManager.tasks.StatusTask;
-import com.example.taskManager.tasks.Task;
-import com.example.taskManager.users.User;
+import com.example.taskManager.entities.tasks.StatusTask;
+import com.example.taskManager.entities.tasks.Task;
+import com.example.taskManager.entities.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

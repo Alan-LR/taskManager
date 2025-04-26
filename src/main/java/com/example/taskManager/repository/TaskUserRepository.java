@@ -1,7 +1,7 @@
 package com.example.taskManager.repository;
 
-import com.example.taskManager.taskUser.TaskUser;
-import com.example.taskManager.taskUser.TaskUserId;
+import com.example.taskManager.entities.taskUser.TaskUser;
+import com.example.taskManager.entities.taskUser.TaskUserId;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
