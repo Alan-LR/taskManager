@@ -5,8 +5,7 @@ import com.example.taskManager.repository.RoleRepository;
 import com.example.taskManager.repository.UserRepository;
 import com.example.taskManager.entities.users.User;
 import com.example.taskManager.entities.users.UserResponseDTO;
-import com.example.taskManager.entities.users.UserResquestDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.taskManager.entities.users.UserRequestDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,7 +31,7 @@ public class UserService {
 
     private static final String USER_NOT_FOUND = "Usuário não encontrado";
 
-    public UserResponseDTO saveUser(UserResquestDTO data){
+    public UserResponseDTO saveUser(UserRequestDTO data){
         Role basicRole = roleRepository.findByName(Role.Values.BASIC.name());
 
         var userDb = repository.findByEmail(data.email());
@@ -69,7 +68,7 @@ public class UserService {
         return false;
     }
 
-    public UserResponseDTO updateUser(Long id, UserResquestDTO data) {
+    public UserResponseDTO updateUser(Long id, UserRequestDTO data) {
         return repository.findById(id)
                 .map(existingUser -> {
                     existingUser.setName(data.name());

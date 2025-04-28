@@ -2,7 +2,8 @@ package com.example.taskManager.controller;
 
 import com.example.taskManager.services.UserService;
 import com.example.taskManager.entities.users.UserResponseDTO;
-import com.example.taskManager.entities.users.UserResquestDTO;
+import com.example.taskManager.entities.users.UserRequestDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,13 @@ public class UserController {
     private UserService service;
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> saveUser(@RequestBody UserResquestDTO data){
+    public ResponseEntity<UserResponseDTO> saveUser(@RequestBody @Valid UserRequestDTO data){
         UserResponseDTO savedUser = service.saveUser(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserResquestDTO data){
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody @Valid UserRequestDTO data){
         UserResponseDTO updateUser = service.updateUser(id, data);
         return  ResponseEntity.ok(updateUser);
     }

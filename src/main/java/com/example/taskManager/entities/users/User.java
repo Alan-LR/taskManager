@@ -44,7 +44,7 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User(UserResquestDTO data){
+    public User(UserRequestDTO data){
         this.name = data.name();
         this.email = data.email();
         this.password = data.password();
