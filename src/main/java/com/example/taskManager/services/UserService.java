@@ -7,6 +7,7 @@ import com.example.taskManager.entities.users.User;
 import com.example.taskManager.entities.users.UserResponseDTO;
 import com.example.taskManager.entities.users.UserRequestDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,11 +23,15 @@ public class UserService {
 
     private RoleRepository roleRepository;
 
+    private BCryptPasswordEncoder passwordEncoder;
+
     //A recomendação atual é utilizar injeção de dependencia com construtor, mas o @Autowired não está errado e ainda é utilizado
     public UserService(UserRepository repository,
-            RoleRepository roleRepository){
+                       RoleRepository roleRepository,
+                       BCryptPasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private static final String USER_NOT_FOUND = "Usuário não encontrado";
@@ -41,6 +46,7 @@ public class UserService {
 
         User user = new User(data);
         user.setRoles(Set.of(basicRole));
+        user.setPassword(passwordEncoder.encode(data.password()));
         repository.save(user);
         return new UserResponseDTO(user);
     }
