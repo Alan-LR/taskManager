@@ -25,7 +25,7 @@ public class User {
 
     private String name;
     private String email;
-    private String pass;
+    private String password;
     private LocalDateTime registrationDate;
 
     @PrePersist
@@ -47,7 +47,7 @@ public class User {
     public User(UserResquestDTO data){
         this.name = data.name();
         this.email = data.email();
-        this.pass = data.pass();
+        this.password = data.password();
     }
 
 }

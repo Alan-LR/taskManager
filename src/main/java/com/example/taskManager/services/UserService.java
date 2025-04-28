@@ -1,5 +1,7 @@
 package com.example.taskManager.services;
 
+import com.example.taskManager.entities.role.Role;
+import com.example.taskManager.repository.RoleRepository;
 import com.example.taskManager.repository.UserRepository;
 import com.example.taskManager.entities.users.User;
 import com.example.taskManager.entities.users.UserResponseDTO;
@@ -11,18 +13,35 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository repository;
+
+    private RoleRepository roleRepository;
+
+    //A recomendação atual é utilizar injeção de dependencia com construtor, mas o @Autowired não está errado e ainda é utilizado
+    public UserService(UserRepository repository,
+            RoleRepository roleRepository){
+        this.repository = repository;
+        this.roleRepository = roleRepository;
+    }
 
     private static final String USER_NOT_FOUND = "Usuário não encontrado";
 
     public UserResponseDTO saveUser(UserResquestDTO data){
+        Role basicRole = roleRepository.findByName(Role.Values.BASIC.name());
+
+        var userDb = repository.findByEmail(data.email());
+        if(userDb.isPresent()){
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
         User user = new User(data);
+        user.setRoles(Set.of(basicRole));
         repository.save(user);
         return new UserResponseDTO(user);
     }
@@ -55,7 +74,7 @@ public class UserService {
                 .map(existingUser -> {
                     existingUser.setName(data.name());
                     existingUser.setEmail(data.email());
-                    existingUser.setPass(data.pass());
+                    existingUser.setPassword(data.password());
 
                     User updatedUser = repository.save(existingUser);
                     return new UserResponseDTO(updatedUser);

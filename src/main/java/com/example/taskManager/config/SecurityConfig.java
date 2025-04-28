@@ -42,7 +42,7 @@ public class SecurityConfig {
                         //adicionando exceção para que essa rota não precise de autenticação e o cliente possa tentar logar
                         .requestMatchers(HttpMethod.POST,"/login").permitAll()
                         //adicionando exceção para que essa rota: Criar usuários novos (ex: como em criar novo usuário)
-                        .requestMatchers(HttpMethod.POST,"/users").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/user").permitAll()
                         .anyRequest().authenticated())
                 //somente localmente para facilitar testes
                 .csrf(csrf -> csrf.disable())

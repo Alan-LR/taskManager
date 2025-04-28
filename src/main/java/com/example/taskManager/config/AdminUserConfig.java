@@ -21,7 +21,7 @@ public class AdminUserConfig implements CommandLineRunner {
     private BCryptPasswordEncoder passwordEncoder;
 
     //A recomendação atual é utilizar injeção de dependencia com construtor, mas o @Autowired não está errado e ainda é utilizado
-    AdminUserConfig(RoleRepository roleRepository,
+    public AdminUserConfig(RoleRepository roleRepository,
                     UserRepository userRepository,
                     BCryptPasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
@@ -33,7 +33,7 @@ public class AdminUserConfig implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         Role roleAdmin = roleRepository.findByName(Role.Values.ADMIN.name());
-        var userAdmin = userRepository.findByUserName("admin");
+        var userAdmin = userRepository.findByName("admin");
 
         userAdmin.ifPresentOrElse(user -> {
             System.out.println("admin created");
@@ -41,8 +41,9 @@ public class AdminUserConfig implements CommandLineRunner {
                 () ->{
                     User user = new User();
                     user.setName("admin");
-                    user.setPass(passwordEncoder.encode("123"));
+                    user.setPassword(passwordEncoder.encode("123"));
                     user.setRoles(Set.of(roleAdmin));
+                    user.setEmail("admin@gmail.com");
                     userRepository.save(user);
                 }
         );
