@@ -1,5 +1,7 @@
 package com.example.taskManager.controller;
 
+import com.example.taskManager.entities.role.Role;
+import com.example.taskManager.entities.users.UserType;
 import com.example.taskManager.services.UserService;
 import com.example.taskManager.entities.users.UserResponseDTO;
 import com.example.taskManager.entities.users.UserRequestDTO;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +22,21 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    @PostMapping
-    public ResponseEntity<UserResponseDTO> saveUser(@RequestBody @Valid UserRequestDTO data){
-        UserResponseDTO savedUser = service.saveUser(data);
+    @PostMapping("/basic")
+    public ResponseEntity<UserResponseDTO> saveBasicUser(@RequestBody @Valid UserRequestDTO data, JwtAuthenticationToken token){
+        UserResponseDTO savedUser = service.saveUser(data, token, UserType.BASIC);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }
+
+    @PostMapping("/manager")
+    public ResponseEntity<UserResponseDTO> saveManagerUser(@RequestBody @Valid UserRequestDTO data, JwtAuthenticationToken token){
+        UserResponseDTO savedUser = service.saveUser(data, token, UserType.MANAGER);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }
+
+    @PostMapping("/admin")
+    public ResponseEntity<UserResponseDTO> saveAdminUser(@RequestBody @Valid UserRequestDTO data, JwtAuthenticationToken token){
+        UserResponseDTO savedUser = service.saveUser(data, token, UserType.ADMIN);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 

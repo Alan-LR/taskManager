@@ -1,13 +1,13 @@
 package com.example.taskManager.services;
 
 import com.example.taskManager.entities.role.Role;
+import com.example.taskManager.entities.users.*;
 import com.example.taskManager.repository.RoleRepository;
 import com.example.taskManager.repository.UserRepository;
-import com.example.taskManager.entities.users.User;
-import com.example.taskManager.entities.users.UserResponseDTO;
-import com.example.taskManager.entities.users.UserRequestDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,30 +25,66 @@ public class UserService {
 
     private BCryptPasswordEncoder passwordEncoder;
 
+    private PermissionService permissionService;
+
     //A recomendação atual é utilizar injeção de dependencia com construtor, mas o @Autowired não está errado e ainda é utilizado
     public UserService(UserRepository repository,
                        RoleRepository roleRepository,
-                       BCryptPasswordEncoder passwordEncoder) {
+                       BCryptPasswordEncoder passwordEncoder,
+                       PermissionService permissionService
+                       ) {
         this.repository = repository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.permissionService = permissionService;
     }
 
     private static final String USER_NOT_FOUND = "Usuário não encontrado";
 
-    public UserResponseDTO saveUser(UserRequestDTO data){
-        Role basicRole = roleRepository.findByName(Role.Values.BASIC.name());
+    @Transactional
+    public UserResponseDTO saveUser(UserRequestDTO data, JwtAuthenticationToken token, UserType typeUser){
+        validateEmail(data);
+        validatePermissionToCreate(typeUser, token);
 
+        return new UserResponseDTO(repository.save(createUser(data, typeUser)));
+    }
+
+    public void validatePermissionToCreate(UserType typeUser, JwtAuthenticationToken token) {
+        User user = repository.findById(Long.parseLong(token.getName()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        boolean hasPermission = switch (typeUser) {
+            case ADMIN -> permissionService.createAdmin(user);
+            case MANAGER -> permissionService.createManager(user);
+            case BASIC -> permissionService.createBasic(user);
+        };
+
+        if (!hasPermission) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Usuário sem permissão para criar " + typeUser.name());
+        }
+    }
+
+    public void validateEmail(UserRequestDTO data) {
         var userDb = repository.findByEmail(data.email());
-        if(userDb.isPresent()){
+        if (userDb.isPresent()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
+    }
 
+    public User createUser(UserRequestDTO data, UserType typeUser) {
         User user = new User(data);
-        user.setRoles(Set.of(basicRole));
+
+        Role.Values roleValue = switch (typeUser) {
+            case BASIC -> Role.Values.BASIC;
+            case MANAGER -> Role.Values.MANAGER;
+            case ADMIN -> Role.Values.ADMIN;
+        };
+
+        Role role = roleRepository.findByName(roleValue.name());
+        user.setRoles(Set.of(role));
         user.setPassword(passwordEncoder.encode(data.password()));
-        repository.save(user);
-        return new UserResponseDTO(user);
+        return user;
     }
 
     public UserResponseDTO getUser(Long id){
