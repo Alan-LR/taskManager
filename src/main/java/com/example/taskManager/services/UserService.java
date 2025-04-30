@@ -55,8 +55,7 @@ public class UserService {
 
         boolean hasPermission = switch (typeUser) {
             case ADMIN -> permissionService.createAdmin(user);
-            case MANAGER -> permissionService.createManager(user);
-            case BASIC -> permissionService.createBasic(user);
+            case MANAGER, BASIC -> permissionService.isManagerOrAdmin(user);
         };
 
         if (!hasPermission) {

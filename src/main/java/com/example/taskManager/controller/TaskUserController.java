@@ -8,6 +8,7 @@ import com.example.taskManager.entities.taskUser.UsersOfTaskResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class TaskUserController {
     private TaskUserService service;
 
     @PostMapping()
-    public ResponseEntity<TaskUserResponseDTO> createTaskUser(@RequestBody TaskUserRequestDTO data){
-        TaskUserResponseDTO responseDTO = service.createTaskUser(data);
+    public ResponseEntity<TaskUserResponseDTO> createTaskUser(@RequestBody TaskUserRequestDTO data, JwtAuthenticationToken token){
+        TaskUserResponseDTO responseDTO = service.createTaskUser(data, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 

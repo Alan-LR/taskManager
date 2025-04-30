@@ -11,15 +11,9 @@ public class PermissionService {
                 r.getName().equalsIgnoreCase(Role.Values.ADMIN.name()));
     }
 
-    public boolean createManager(User user) {
-        return user.getRoles().stream().anyMatch(r ->
-                        r.getName().equalsIgnoreCase(Role.Values.MANAGER.name()) ||
-                        r.getName().equalsIgnoreCase(Role.Values.ADMIN.name()));
+    public Boolean isManagerOrAdmin(User user){
+        return user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals(Role.Values.MANAGER.name()) || role.getName().equals(Role.Values.ADMIN.name()));
     }
 
-    public boolean createBasic(User user){
-        return user.getRoles().stream().anyMatch(r ->
-                r.getName().equalsIgnoreCase(Role.Values.MANAGER.name()) ||
-                        r.getName().equalsIgnoreCase(Role.Values.ADMIN.name()));
-    }
 }

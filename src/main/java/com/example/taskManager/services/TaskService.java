@@ -5,6 +5,7 @@ import com.example.taskManager.entities.tasks.StatusTask;
 import com.example.taskManager.entities.tasks.Task;
 import com.example.taskManager.entities.tasks.TaskRequestDTO;
 import com.example.taskManager.entities.tasks.TaskResponseDTO;
+import com.example.taskManager.entities.users.PermissionService;
 import com.example.taskManager.entities.users.User;
 import com.example.taskManager.entities.users.UserRequestDTO;
 import com.example.taskManager.repository.TaskRepository;
@@ -24,12 +25,15 @@ public class TaskService {
 
     private TaskRepository repository;
     private UserRepository userRepository;
+    private PermissionService permissionService;
     private static final String TASK_NOT_FOUND = "Tarefa não encontrada";
 
     public TaskService(TaskRepository repository,
-                       UserRepository userRepository){
+                       UserRepository userRepository,
+                       PermissionService permissionService){
         this.repository = repository;
         this.userRepository = userRepository;
+        this.permissionService = permissionService;
     }
 
     public TaskResponseDTO saveTask(TaskRequestDTO data, JwtAuthenticationToken token) {
@@ -38,7 +42,7 @@ public class TaskService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        if (!isManagerOrAdmin(user)) {
+        if (!permissionService.isManagerOrAdmin(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas usuários com permissão MANAGER ou ADMIN podem criar tasks");
         }
 
@@ -54,11 +58,6 @@ public class TaskService {
         if (taskDb.isPresent()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
-    }
-
-    public Boolean isManagerOrAdmin(User user){
-        return user.getRoles().stream()
-                .anyMatch(role -> role.getName().equals(Role.Values.MANAGER.name()) || role.getName().equals(Role.Values.ADMIN.name()));
     }
 
     public TaskResponseDTO getTask(Long id) {
