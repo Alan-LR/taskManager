@@ -23,9 +23,7 @@ import java.util.stream.Collectors;
 public class TokenService {
 
     private JwtEncoder jwtEncoder;
-
     private UserRepository repository;
-
     private BCryptPasswordEncoder passwordEncoder;
 
     public TokenService(JwtEncoder jwtEncoder,

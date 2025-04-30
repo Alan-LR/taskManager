@@ -33,8 +33,8 @@ public class TaskUserController {
     }
 
     @GetMapping("/idUser/{id}")
-    public ResponseEntity<List<UserTasksResponseDTO>> getTasksOfUserByIdUser(@PathVariable Long id){
-        List<UserTasksResponseDTO> taskUserResponseDTOS = service.getTasksOfUserByIdUser(id);
+    public ResponseEntity<List<UserTasksResponseDTO>> getTasksOfUserByIdUser(@PathVariable Long id, JwtAuthenticationToken token){
+        List<UserTasksResponseDTO> taskUserResponseDTOS = service.getTasksOfUserByIdUser(id, token);
         return ResponseEntity.ok(taskUserResponseDTOS);
     }
 

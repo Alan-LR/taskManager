@@ -22,22 +22,21 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     private TaskRepository repository;
-    private UserRepository userRepository;
     private PermissionService permissionService;
+    private UserService userService;
 
     public TaskService(TaskRepository repository,
                        UserRepository userRepository,
-                       PermissionService permissionService){
+                       PermissionService permissionService,
+                       UserService userService){
         this.repository = repository;
-        this.userRepository = userRepository;
         this.permissionService = permissionService;
+        this.userService = userService;
     }
 
     public TaskResponseDTO saveTask(TaskRequestDTO data, JwtAuthenticationToken token) {
         validateNameTask(data);
-        Long userId = Long.parseLong(token.getName());
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksMessages.USER_NOT_FOUND));
+        User user = userService.getUserToken(token);
 
         if (!permissionService.isManagerOrAdmin(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, TasksMessages.PERMISSION_DENIED_DELEGATE_TASK);

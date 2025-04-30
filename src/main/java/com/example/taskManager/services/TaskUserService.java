@@ -1,6 +1,7 @@
 package com.example.taskManager.services;
 
 import com.example.taskManager.constants.TasksUsersMessages;
+import com.example.taskManager.constants.UsersMessages;
 import com.example.taskManager.dtos.tasksusers.TaskUserRequestDTO;
 import com.example.taskManager.dtos.tasksusers.TaskUserResponseDTO;
 import com.example.taskManager.dtos.tasksusers.UserTasksResponseDTO;
@@ -24,28 +25,26 @@ import java.util.stream.Collectors;
 public class TaskUserService {
 
     private TaskUserRepository repository;
-
     private TaskRepository taskRepository;
-
     private UserRepository userRepository;
-
     private PermissionService permissionService;
+    private UserService userService;
 
     public TaskUserService(TaskUserRepository repository,
                            TaskRepository taskRepository,
                            UserRepository userRepository,
-                           PermissionService permissionService){
+                           PermissionService permissionService,
+                           UserService userService){
         this.repository = repository;
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.permissionService = permissionService;
-
+        this.userService = userService;
     }
 
     public TaskUserResponseDTO createTaskUser(TaskUserRequestDTO data, JwtAuthenticationToken token) {
-        Long userId = Long.parseLong(token.getName());
-        User userLogged = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.USER_NOT_FOUND));
+        User userLogged = userService.getUserToken(token);
+
         if (!permissionService.isManagerOrAdmin(userLogged)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, TasksUsersMessages.PERMISSION_DENIED_DELEGATE_TASK);
         }
@@ -70,7 +69,10 @@ public class TaskUserService {
         return repository.findAll().stream().map(TaskUserResponseDTO::new).toList();
     }
 
-    public List<UserTasksResponseDTO> getTasksOfUserByIdUser(Long id){
+    public List<UserTasksResponseDTO> getTasksOfUserByIdUser(Long id, JwtAuthenticationToken token){
+        //User user = userRepository.findById(Long.parseLong(token.getName()))
+        //        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.USER_NOT_FOUND));
+
         List<TaskUser> taskUsers = repository.findByUserId(id);
         if(taskUsers.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.USER_NOT_HAVE_TASKS);

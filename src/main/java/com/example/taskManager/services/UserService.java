@@ -23,11 +23,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository repository;
-
     private RoleRepository roleRepository;
-
     private BCryptPasswordEncoder passwordEncoder;
-
     private PermissionService permissionService;
 
     //A recomendação atual é utilizar injeção de dependencia com construtor, mas o @Autowired não está errado e ainda é utilizado
@@ -51,8 +48,7 @@ public class UserService {
     }
 
     public void validatePermissionToCreate(UserType typeUser, JwtAuthenticationToken token) {
-        User user = repository.findById(Long.parseLong(token.getName()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, UsersMessages.USER_NOT_FOUND));
+        User user = getUserToken(token);
 
         boolean hasPermission = switch (typeUser) {
             case ADMIN -> permissionService.createAdmin(user);
@@ -63,6 +59,11 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     UsersMessages.USER_NOT_PERMISSIONS + " " + typeUser.name());
         }
+    }
+
+    public User getUserToken(JwtAuthenticationToken token){
+        return repository.findById(Long.parseLong(token.getName()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, UsersMessages.USER_NOT_FOUND));
     }
 
     public void validateEmail(UserRequestDTO data) {
