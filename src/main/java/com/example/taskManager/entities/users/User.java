@@ -1,5 +1,6 @@
 package com.example.taskManager.entities.users;
 
+import com.example.taskManager.dtos.users.UserRequestDTO;
 import com.example.taskManager.entities.role.Role;
 import com.example.taskManager.entities.taskUser.TaskUser;
 import jakarta.persistence.*;

@@ -1,10 +1,9 @@
 package com.example.taskManager.controller;
 
-import com.example.taskManager.entities.role.Role;
 import com.example.taskManager.entities.users.UserType;
 import com.example.taskManager.services.UserService;
-import com.example.taskManager.entities.users.UserResponseDTO;
-import com.example.taskManager.entities.users.UserRequestDTO;
+import com.example.taskManager.dtos.users.UserResponseDTO;
+import com.example.taskManager.dtos.users.UserRequestDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

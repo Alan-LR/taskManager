@@ -1,5 +1,8 @@
 package com.example.taskManager.services;
 
+import com.example.taskManager.constants.UsersMessages;
+import com.example.taskManager.dtos.users.UserRequestDTO;
+import com.example.taskManager.dtos.users.UserResponseDTO;
 import com.example.taskManager.entities.role.Role;
 import com.example.taskManager.entities.users.*;
 import com.example.taskManager.repository.RoleRepository;
@@ -39,8 +42,6 @@ public class UserService {
         this.permissionService = permissionService;
     }
 
-    private static final String USER_NOT_FOUND = "Usuário não encontrado";
-
     @Transactional
     public UserResponseDTO saveUser(UserRequestDTO data, JwtAuthenticationToken token, UserType typeUser){
         validateEmail(data);
@@ -51,7 +52,7 @@ public class UserService {
 
     public void validatePermissionToCreate(UserType typeUser, JwtAuthenticationToken token) {
         User user = repository.findById(Long.parseLong(token.getName()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, UsersMessages.USER_NOT_FOUND));
 
         boolean hasPermission = switch (typeUser) {
             case ADMIN -> permissionService.createAdmin(user);
@@ -60,7 +61,7 @@ public class UserService {
 
         if (!hasPermission) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "Usuário sem permissão para criar " + typeUser.name());
+                    UsersMessages.USER_NOT_PERMISSIONS + " " + typeUser.name());
         }
     }
 
@@ -88,7 +89,7 @@ public class UserService {
 
     public UserResponseDTO getUser(Long id){
         Optional<User> userOptional = repository.findById(id);
-        User user = userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+        User user = userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, UsersMessages.USER_NOT_FOUND));
         return new UserResponseDTO(user);
     }
 
@@ -119,6 +120,6 @@ public class UserService {
                     User updatedUser = repository.save(existingUser);
                     return new UserResponseDTO(updatedUser);
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, UsersMessages.USER_NOT_FOUND));
     }
 }

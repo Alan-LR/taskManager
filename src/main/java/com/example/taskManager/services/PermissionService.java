@@ -1,6 +1,7 @@
-package com.example.taskManager.entities.users;
+package com.example.taskManager.services;
 
 import com.example.taskManager.entities.role.Role;
+import com.example.taskManager.entities.users.User;
 import org.springframework.stereotype.Service;
 
 @Service

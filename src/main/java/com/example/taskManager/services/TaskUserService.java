@@ -1,15 +1,17 @@
 package com.example.taskManager.services;
 
-import com.example.taskManager.entities.role.Role;
+import com.example.taskManager.constants.TasksUsersMessages;
+import com.example.taskManager.dtos.tasksusers.TaskUserRequestDTO;
+import com.example.taskManager.dtos.tasksusers.TaskUserResponseDTO;
+import com.example.taskManager.dtos.tasksusers.UserTasksResponseDTO;
+import com.example.taskManager.dtos.tasksusers.UsersOfTaskResponseDTO;
 import com.example.taskManager.entities.taskUser.*;
-import com.example.taskManager.entities.users.PermissionService;
 import com.example.taskManager.repository.TaskRepository;
 import com.example.taskManager.repository.TaskUserRepository;
 import com.example.taskManager.repository.UserRepository;
 import com.example.taskManager.entities.tasks.StatusTask;
 import com.example.taskManager.entities.tasks.Task;
 import com.example.taskManager.entities.users.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -40,26 +42,22 @@ public class TaskUserService {
 
     }
 
-    private static final String TASK_CLOSED = "Não é possível adicionar usuários a uma tarefa com status 'CLOSE'.";
-    private static final String USER_NOT_HAVE_TASKS = "Esse usuário não possuí tarefas";
-    private static final String TASK_NOT_HAVE_USERS = "Essa tarefa não possuí usuários";
-
     public TaskUserResponseDTO createTaskUser(TaskUserRequestDTO data, JwtAuthenticationToken token) {
         Long userId = Long.parseLong(token.getName());
         User userLogged = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.USER_NOT_FOUND));
         if (!permissionService.isManagerOrAdmin(userLogged)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas usuários com permissão MANAGER ou ADMIN podem criar tasks");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, TasksUsersMessages.PERMISSION_DENIED_DELEGATE_TASK);
         }
 
         User user = userRepository.findById(data.userId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.USER_NOT_FOUND));
 
         Task task = taskRepository.findById(data.taskId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tarefa não encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.TASK_NOT_FOUND));
 
         if(task.getStatus().equals(StatusTask.CLOSE)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, TASK_CLOSED);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, TasksUsersMessages.TASK_CLOSED);
         }
 
         TaskUserId taskUserId = new TaskUserId(data.taskId(), data.userId());
@@ -75,7 +73,7 @@ public class TaskUserService {
     public List<UserTasksResponseDTO> getTasksOfUserByIdUser(Long id){
         List<TaskUser> taskUsers = repository.findByUserId(id);
         if(taskUsers.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_HAVE_TASKS);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.USER_NOT_HAVE_TASKS);
         }
         return taskUsers.stream().map(UserTasksResponseDTO::new).collect(Collectors.toList());
     }
@@ -83,7 +81,7 @@ public class TaskUserService {
     public List<UsersOfTaskResponseDTO> getUsersOfTaskByIdTask(Long id){
         List<TaskUser> usersTask = repository.findByTaskIdNativeQuery(id);
         if(usersTask.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_HAVE_USERS);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, TasksUsersMessages.TASK_NOT_HAVE_USERS);
         }
         return usersTask.stream().map(UsersOfTaskResponseDTO::new).collect(Collectors.toList());
     }

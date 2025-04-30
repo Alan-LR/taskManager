@@ -1,7 +1,7 @@
 package com.example.taskManager.services;
 
-import com.example.taskManager.entities.login.LoginRequest;
-import com.example.taskManager.entities.login.LoginResponse;
+import com.example.taskManager.dtos.login.LoginRequest;
+import com.example.taskManager.dtos.login.LoginResponse;
 import com.example.taskManager.entities.role.Role;
 import com.example.taskManager.entities.users.User;
 import com.example.taskManager.repository.UserRepository;

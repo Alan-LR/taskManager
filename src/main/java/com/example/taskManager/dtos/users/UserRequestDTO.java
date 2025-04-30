@@ -1,5 +1,6 @@
-package com.example.taskManager.entities.users;
+package com.example.taskManager.dtos.users;
 
+import com.example.taskManager.entities.users.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

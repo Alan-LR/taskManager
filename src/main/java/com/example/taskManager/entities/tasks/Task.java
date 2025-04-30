@@ -1,5 +1,6 @@
 package com.example.taskManager.entities.tasks;
 
+import com.example.taskManager.dtos.tasks.TaskRequestDTO;
 import com.example.taskManager.entities.taskUser.TaskUser;
 import jakarta.persistence.*;
 import lombok.*;

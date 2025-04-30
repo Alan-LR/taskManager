@@ -1,5 +1,6 @@
-package com.example.taskManager.entities.tasks;
+package com.example.taskManager.dtos.tasks;
 
+import com.example.taskManager.entities.tasks.Task;
 import jakarta.validation.constraints.NotBlank;
 
 public record TaskRequestDTO (

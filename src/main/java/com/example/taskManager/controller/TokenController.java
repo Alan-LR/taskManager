@@ -1,7 +1,7 @@
 package com.example.taskManager.controller;
 
-import com.example.taskManager.entities.login.LoginRequest;
-import com.example.taskManager.entities.login.LoginResponse;
+import com.example.taskManager.dtos.login.LoginRequest;
+import com.example.taskManager.dtos.login.LoginResponse;
 import com.example.taskManager.services.TokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

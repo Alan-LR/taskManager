@@ -1,4 +1,4 @@
-package com.example.taskManager.entities.taskUser;
+package com.example.taskManager.dtos.tasksusers;
 
 import jakarta.validation.constraints.NotBlank;
 

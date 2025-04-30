@@ -1,4 +1,7 @@
-package com.example.taskManager.entities.tasks;
+package com.example.taskManager.dtos.tasks;
+
+import com.example.taskManager.entities.tasks.StatusTask;
+import com.example.taskManager.entities.tasks.Task;
 
 import java.time.LocalDateTime;
 

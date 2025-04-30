@@ -1,13 +1,11 @@
 package com.example.taskManager.services;
 
-import com.example.taskManager.entities.role.Role;
+import com.example.taskManager.constants.TasksMessages;
 import com.example.taskManager.entities.tasks.StatusTask;
 import com.example.taskManager.entities.tasks.Task;
-import com.example.taskManager.entities.tasks.TaskRequestDTO;
-import com.example.taskManager.entities.tasks.TaskResponseDTO;
-import com.example.taskManager.entities.users.PermissionService;
+import com.example.taskManager.dtos.tasks.TaskRequestDTO;
+import com.example.taskManager.dtos.tasks.TaskResponseDTO;
 import com.example.taskManager.entities.users.User;
-import com.example.taskManager.entities.users.UserRequestDTO;
 import com.example.taskManager.repository.TaskRepository;
 import com.example.taskManager.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -26,7 +24,6 @@ public class TaskService {
     private TaskRepository repository;
     private UserRepository userRepository;
     private PermissionService permissionService;
-    private static final String TASK_NOT_FOUND = "Tarefa não encontrada";
 
     public TaskService(TaskRepository repository,
                        UserRepository userRepository,
@@ -40,10 +37,10 @@ public class TaskService {
         validateNameTask(data);
         Long userId = Long.parseLong(token.getName());
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksMessages.USER_NOT_FOUND));
 
         if (!permissionService.isManagerOrAdmin(user)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas usuários com permissão MANAGER ou ADMIN podem criar tasks");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, TasksMessages.PERMISSION_DENIED_DELEGATE_TASK);
         }
 
         Task task = new Task(data);
@@ -62,7 +59,7 @@ public class TaskService {
 
     public TaskResponseDTO getTask(Long id) {
         Optional<Task> taskOptional = repository.findById(id);
-        Task task = taskOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND));
+        Task task = taskOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksMessages.TASK_NOT_FOUND));
         return new TaskResponseDTO(task);
     }
 
@@ -96,7 +93,7 @@ public class TaskService {
 
                     Task updateTask = repository.save(existingTask);
                     return new TaskResponseDTO(updateTask);
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksMessages.TASK_NOT_FOUND));
 
     }
 
@@ -107,6 +104,6 @@ public class TaskService {
 
                     Task updateTask = repository.save(existingTask);
                     return new TaskResponseDTO(updateTask);
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TASK_NOT_FOUND));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, TasksMessages.TASK_NOT_FOUND));
     }
 }
