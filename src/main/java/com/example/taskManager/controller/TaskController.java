@@ -8,6 +8,7 @@ import com.example.taskManager.entities.tasks.UpdateTaskStatusRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +20,11 @@ public class TaskController {
     @Autowired
     private TaskService service;
 
+    //Com as roles configuradas no JWT e as roles indo no token podemos utilizar essa anotação no controller
+    //@PreAuthorize("hasRole('GERENTE') or hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<TaskResponseDTO> saveTask(@RequestBody TaskRequestDTO data) {
-        TaskResponseDTO savedTask = service.saveTask(data);
+    public ResponseEntity<TaskResponseDTO> saveTask(@RequestBody TaskRequestDTO data, JwtAuthenticationToken token) {
+        TaskResponseDTO savedTask = service.saveTask(data, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
     }
 

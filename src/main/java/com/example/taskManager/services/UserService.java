@@ -51,7 +51,7 @@ public class UserService {
 
     public void validatePermissionToCreate(UserType typeUser, JwtAuthenticationToken token) {
         User user = repository.findById(Long.parseLong(token.getName()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
 
         boolean hasPermission = switch (typeUser) {
             case ADMIN -> permissionService.createAdmin(user);
