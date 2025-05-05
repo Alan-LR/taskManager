@@ -1,6 +1,7 @@
 package com.example.taskManager.entities.users;
 
 import com.example.taskManager.dtos.users.UserRequestDTO;
+import com.example.taskManager.entities.comment.Comment;
 import com.example.taskManager.entities.role.Role;
 import com.example.taskManager.entities.taskUser.TaskUser;
 import jakarta.persistence.*;
@@ -44,6 +45,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     public User(UserRequestDTO data){
         this.name = data.name();
